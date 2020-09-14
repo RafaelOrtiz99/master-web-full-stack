@@ -1,0 +1,87 @@
+Comandos utilizados:
+=================
+
+Apache
+======
+localhost
+ag apache (alias)
+---------
+apacheAccessLog='cat /var/log/httpd/access_log'
+
+Estado/iniciar/reiniciar/parar
+------------------------------
+sudo systemctl status httpd
+sudo systemctl start httpd
+sudo systemctl restart httpd.service
+sudo systemctl stop httpd
+
+# /etc/rc.d/httpd restart
+
+Folder de configuración de Apache:
+/etc/httpd/conf/
+Archivo: httpd.conf
+Folder donde se guardan los archivos de logs:
+/var/log/httpd/
+
+
+ls -la: ver permisos
+
+Apache web-dir: Directorio donde se guardan los archivos del servidor http
+/srv/http
+
+Mariadb
+=======
+Iniciar mysql daemon
+# mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+
+sudo systemctl status mariadb
+sudo systemctl start mariadb
+sudo systemctl restart mariadb
+sudo systemctl stop mariadb
+Para iniciar el servicio cuando inicia el sistema:
+sudo systemctl enable mysqld
+
+Para loguearnos 
+mysql -u root -p
+
+Nota: la contraseña predeterminada está vacía. 
+
+#Si algo falla
+sudo mysql_secure_installation
+
+show databases;
+
+quit
+
+PHP
+===
+Luego de instalar php, nos dirijimos a 
+/etc/php/php.ini
+Configuramos el 
+- date.timezone = ?
+Descomentamos, para que php pueda trabajar con Mariadb:
+- extension=pdo_mysql.so
+- extension=mysqli.so
+Definimos el directorio de PHP
+- open_basedir = /srv/http/ 
+
+Install: php-apache
+
+Luego configuramos
+/etc/httpd/conf/httpd.conf
+Descomentar:
+- LoadModule mpm_prefork_module modules/mod_mpm_prefork.so
+Comentar:
+- #LoadModule mpm_event_module modules/mod_mpm_event.so
+Añadir las siguientes al final de la lista LoadModule:
+- LoadModule php7_module modules/libphp7.so
+- AddHandler php7-script php
+Place this at the end of the Include list:
+- Include conf/extra/php7_module.conf
+
+Levantamos Apache:
+systemctl start httpd
+Probamos si funciona PHP con apache:
+?php
+    phpinfo();
+?

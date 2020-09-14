@@ -1,0 +1,5 @@
+instalar composer 
+arch linux = pacman -S composer
+
+Crear proyecto
+composer create-project laravel/laravel/project-name

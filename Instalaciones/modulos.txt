@@ -1,0 +1,9 @@
+activar modulos apache:
+rewrite_module
+
+modulos php:
+sql
+sqli
+openssl
+extension=openssl.so
+extension=phar.so
