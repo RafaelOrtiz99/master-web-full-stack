@@ -19,3 +19,5 @@ Route::get('/', function () {
 });
 
 Route::get('animals', [TestController::class,'index']);
+
+Route::get('testOrm', [TestController::class,'testOrm']);
