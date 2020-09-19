@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -29,7 +30,7 @@ class UserController extends Controller
             $validate = \Validator::make($params_array,[
                 'name'     => 'required|alpha',
                 'surname'  => 'required|alpha',
-                'email'    => 'required|email',
+                'email'    => 'required|email|unique:users',
                 'password' => 'required',
             ]);
 
@@ -43,10 +44,24 @@ class UserController extends Controller
                 return response()->json($data, 400);
             }
             else{
+
+                //Cifrar contraseña
+                $encrypt_password = password_hash($params->password, PASSWORD_BCRYPT, ['cost' => 4]);
+
+                //Crear usuario
+                $user = new User();
+                $user->name = $params_array['name'];
+                $user->surname = $params_array['surname'];
+                $user->email = $params_array['email'];
+                $user->role = 'role_user';
+                $user->password = $encrypt_password;
+                $user->save();
+
                 $data = [
                     'status' => 'success',
                     'code' => 200,
-                    'message' => 'User Saved'
+                    'message' => 'User Saved',
+                    'user' => $user
                 ];
             }
         }
@@ -61,13 +76,6 @@ class UserController extends Controller
 
         return response()->json($data, $data['code']);
         
-        //Cifrar contraseña
-
-        //Comprobar si el usuario existe
-
-        //Crear usuario
-
-       return response()->json($data, $data['code']);
    }
 
    public function login(Request $request){
