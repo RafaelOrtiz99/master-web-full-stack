@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TestController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,10 +14,19 @@ use App\Http\Controllers\TestController;
 |
 */
 
+/*
+ * Métodos HTTP
+ * 
+ * GET: Conseguir datos o recursos
+ * POST: Guardar datos o recursos, como lógica
+ * PUT: Actualizar recursos o datos
+ * DELETE: Eliminar datos o recursos
+ * 
+ */
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('animals', [TestController::class,'index']);
-
-Route::get('testOrm', [TestController::class,'testOrm']);
+Route::post('api/register',[UserController::class,'register']);
+Route::post('api/login',[UserController::class,'login']);

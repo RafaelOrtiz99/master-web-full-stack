@@ -3,3 +3,8 @@ arch linux = pacman -S composer
 
 Crear proyecto
 composer create-project laravel/laravel/project-name
+
+limpiar cache:
+php artisan config:cache
+php artisan config:clear
+php artisan cache:clear
