@@ -8,3 +8,18 @@ limpiar cache:
 php artisan config:cache
 php artisan config:clear
 php artisan cache:clear
+
+Generar controller
+php artisan mae:controller nameController
+
+Ver routes
+php artisan route:list
+
+Actualizar dependencias
+composer update
+
+instalar dependencias
+composer install
+
+generar provider
+php artisan make:provider nameProvider
