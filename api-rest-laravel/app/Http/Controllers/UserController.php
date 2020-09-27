@@ -80,15 +80,58 @@ class UserController extends Controller
    }
 
    public function login(Request $request){
-       
-       $email = 'r3@m.com';
-       $password = '9906';
-       //$pwd = password_hash($password, PASSWORD_BCRYPT, ['cost' => 4]);
-       $pwd = hash('sha256', $password);
-       
-       $jwtAuth = new \JwtAuth();
 
-       return response()->json($jwtAuth->signUp($email, $pwd, true));
+        $jwtAuth = new \JwtAuth();
+
+        //Recibir datos por POST
+        $json = $request->input('json', null);
+        $params = json_decode($json);
+        $params_array = json_decode($json, true);
+
+        //Validar datos
+        $validate = \Validator::make($params_array,[
+            'email'    => 'required|email',
+            'password' => 'required'
+        ]);
+
+        if($validate->fails()){
+            $signUp = [
+                'status' => 'error',
+                'code' => 404,
+                'message' => 'Authentication Failed',
+                'errors' => $validate->errors()
+            ];
+        }
+        else{
+
+            //Cifrar password
+            //$pwd = password_hash($password, PASSWORD_BCRYPT, ['cost' => 4]);
+            $pwd = hash('sha256', $params->password);
+            $signUp = $jwtAuth->signUp($params->email, $pwd);
+
+            if(!empty($params->getTSoken)){
+                $signUp = $jwtAuth->signUp($params->email, $pwd, true);
+            }
+        }
+
+        //Devolver token o datos
+        return response()->json($signUp,200);
+
+   }
+
+   public function update(Request $request){
+       $token = $request->header('Auth');
+
+       $jwtAuth = new \JwtAuth();
+       $checkToken = $jwtAuth->checkToken($token);
+
+       if($checkToken){
+           echo "<h1>Login Correcto</h1>";
+       }
+       else{
+        echo "<h1>Login Incorrecto</h1>";
+       }
+       die();
    }
     
 }
